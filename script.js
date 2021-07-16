@@ -73,10 +73,12 @@ async function tryToFindSlot () {
 async function fetchGoodSlots (searchResultIds) {
   const results = await Promise.allSettled(searchResultIds.map(id => fetchSlotsById(id)))
 
+  const blacklist = ['Haguenau', 'Montswiller', 'Wasselonne']
+
   const slots = results
     .filter(r => r.status === "fulfilled")
     .flatMap(r => r.value)
-    .filter(({ date, search_result }) => !['Haguenau', 'Montswiller'].includes(search_result.city))
+    .filter(({ date, search_result }) => !blacklist.includes(search_result.city))
     .sort(firstBy('slot'))
     .map(({ date, search_result }) => ({
       date,
