@@ -4,6 +4,10 @@ const notifier = require('node-notifier')
 const cheerio = require('cheerio')
 const open = require('open')
 
+const myLat = 48.6049285
+const myLng = 7.6845777
+const radiusAroundMe = 17 // km
+
 main()
 
 async function main () {
@@ -14,10 +18,6 @@ async function main () {
       await sleep(5_000)
     }
   }
-}
-
-function sleep (ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 // [...document.querySelectorAll('.dl-search-result')].map(node => node.id).map(id => /search-result-(?<id>.*)/.exec(id)?.groups.id)
@@ -36,8 +36,15 @@ async function listSearchResultsOnPage (page) {
 
   const $ = cheerio.load(html)
 
-  const searchResultIds = $('.dl-search-result')
-    .toArray()
+  const searchResultNodes = $('.dl-search-result').toArray()
+
+  const goodSearchResultNodes = searchResultNodes.filter(node => {
+    const lat = parseFloat(node.attribs['data-lat'])
+    const lng = parseFloat(node.attribs['data-lng'])
+    return gpsDistance(lat, lng, myLat, myLng) <= radiusAroundMe
+  })
+
+  const searchResultIds = goodSearchResultNodes
     .map(node => node.attribs.id)
     .map(id => /search-result-(?<id>.*)/.exec(id)?.groups.id)
   
@@ -75,20 +82,9 @@ async function tryToFindSlot () {
 async function fetchGoodSlots (searchResultIds) {
   const results = await Promise.allSettled(searchResultIds.map(id => fetchSlotsById(id)))
 
-  const blacklist = [
-    'Haguenau',
-    'Montswiller',
-    'Monswiller',
-    'Wasselonne',
-    'Obernai',
-    'Selestat',
-    'Sélestat',
-  ]
-
   const slots = results
     .filter(r => r.status === "fulfilled")
     .flatMap(r => r.value)
-    .filter(({ date, search_result }) => !blacklist.includes(search_result.city))
     .filter(({ date, search_result }) => date < '2021-07-21T00:00:00.000+02:00')
     .sort(firstBy('slot'))
     .map(({ date, search_result }) => ({
@@ -97,7 +93,7 @@ async function fetchGoodSlots (searchResultIds) {
       zipcode: search_result.zipcode,
       city: search_result.city
     }))
-  
+
   const errors = results
     .filter(r => r.status === 'rejected')
     .map(r => r.reason)
@@ -138,4 +134,21 @@ async function fetchSlotsById(searchResultId) {
   const search_result = response.data.search_result
 
   return dates.map(date => ({ date, search_result }))
+}
+
+function toRad (value) {
+  return (value * Math.PI) / 180
+}
+
+function gpsDistance (latA, lngA, latB, lngB) {
+  latA = toRad(latA)
+  latB = toRad(latB)
+  lngA = toRad(lngA)
+  lngB = toRad(lngB)
+  const earthRadius = 6371
+  return earthRadius * Math.acos(Math.sin(latA) * Math.sin(latB) + Math.cos(latA) * Math.cos(latB) * Math.cos(lngB - lngA))
+}
+
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
