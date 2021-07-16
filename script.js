@@ -2,22 +2,28 @@ const axios = require('axios').default
 const { firstBy } = require('thenby')
 const notifier = require('node-notifier')
 const cheerio = require('cheerio')
+const open = require('open')
+
+notifier.on('click', function (notifierObject, options, event) {
+  // Triggers if `wait: true` and user clicks notification
+  console.log('click', event, options, notifierObject)
+  open(event.url)
+})
 
 main()
 
 async function main () {
-  let interval
-
-  async function tick () {
-    const found = await tryToFindSlot()
-    if (found) {
-      clearInterval(interval)
-    }
+  let found = false
+  while (!found) {
+    found = await tryToFindSlot()
+    // if (!found) {
+    await sleep(5_000)
+    // }
   }
+}
 
-  tick()
-
-  interval = setInterval(tick, 30_000)
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 // [...document.querySelectorAll('.dl-search-result')].map(node => node.id).map(id => /search-result-(?<id>.*)/.exec(id)?.groups.id)
@@ -64,7 +70,9 @@ async function tryToFindSlot () {
     notifier.notify({
       title: 'VACCIN TROUVÉ !',
       message: `Le ${date} à ${slot.city}`,
-      open: slot.url
+      open: slot.url,
+      wait: true,
+      sound: true
     })
   })
   return true
@@ -73,12 +81,19 @@ async function tryToFindSlot () {
 async function fetchGoodSlots (searchResultIds) {
   const results = await Promise.allSettled(searchResultIds.map(id => fetchSlotsById(id)))
 
-  const blacklist = ['Haguenau', 'Montswiller', 'Wasselonne']
+  const blacklist = [
+    'Haguenau',
+    'Montswiller',
+    'Monswiller',
+    'Wasselonne',
+    'Obernai'
+  ]
 
   const slots = results
     .filter(r => r.status === "fulfilled")
     .flatMap(r => r.value)
     .filter(({ date, search_result }) => !blacklist.includes(search_result.city))
+    .filter(({ date, search_result }) => date < '2021-07-21T00:00:00.000+02:00')
     .sort(firstBy('slot'))
     .map(({ date, search_result }) => ({
       date,
