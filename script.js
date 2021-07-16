@@ -4,21 +4,15 @@ const notifier = require('node-notifier')
 const cheerio = require('cheerio')
 const open = require('open')
 
-notifier.on('click', function (notifierObject, options, event) {
-  // Triggers if `wait: true` and user clicks notification
-  console.log('click', event, options, notifierObject)
-  open(event.url)
-})
-
 main()
 
 async function main () {
   let found = false
   while (!found) {
     found = await tryToFindSlot()
-    // if (!found) {
-    await sleep(5_000)
-    // }
+    if (!found) {
+      await sleep(5_000)
+    }
   }
 }
 
@@ -69,12 +63,12 @@ async function tryToFindSlot () {
     const date = slot.date.slice(0, 10)
     notifier.notify({
       title: 'VACCIN TROUVÉ !',
-      message: `Le ${date} à ${slot.city}`,
-      open: slot.url,
-      wait: true,
-      sound: true
+      message: `Le ${date} à ${slot.city}`
     })
   })
+
+  open(slots[0].url)
+
   return true
 }
 
@@ -86,7 +80,9 @@ async function fetchGoodSlots (searchResultIds) {
     'Montswiller',
     'Monswiller',
     'Wasselonne',
-    'Obernai'
+    'Obernai',
+    'Selestat',
+    'Sélestat',
   ]
 
   const slots = results
