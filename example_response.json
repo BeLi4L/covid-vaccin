@@ -1,0 +1,163 @@
+{
+  "availabilities": [
+    {
+      "date": "2021-07-16",
+      "slots": [],
+      "substitution": null
+    },
+    {
+      "date": "2021-07-17",
+      "slots": [],
+      "substitution": null
+    },
+    {
+      "date": "2021-07-18",
+      "slots": [],
+      "substitution": null
+    },
+    {
+      "date": "2021-07-19",
+      "slots": [],
+      "substitution": null
+    },
+    {
+      "date": "2021-07-20",
+      "slots": [],
+      "substitution": null
+    },
+    {
+      "date": "2021-07-21",
+      "slots": [
+        {
+          "agenda_id": 482363,
+          "practitioner_agenda_id": null,
+          "start_date": "2021-07-21T14:10:00.000+02:00",
+          "end_date": "2021-07-21T14:20:00.000+02:00",
+          "steps": [
+            {
+              "agenda_id": 482363,
+              "practitioner_agenda_id": null,
+              "start_date": "2021-07-21T14:10:00.000+02:00",
+              "end_date": "2021-07-21T14:20:00.000+02:00",
+              "visit_motive_id": 2860964
+            },
+            {
+              "agenda_id": 462118,
+              "practitioner_agenda_id": null,
+              "start_date": "2021-08-11T09:00:00.000+02:00",
+              "end_date": "2021-08-11T09:10:00.000+02:00",
+              "visit_motive_id": 2860965
+            }
+          ]
+        }
+      ],
+      "substitution": null
+    },
+    {
+      "date": "2021-07-22",
+      "slots": [
+        {
+          "agenda_id": 456400,
+          "practitioner_agenda_id": null,
+          "start_date": "2021-07-22T14:20:00.000+02:00",
+          "end_date": "2021-07-22T14:30:00.000+02:00",
+          "steps": [
+            {
+              "agenda_id": 456400,
+              "practitioner_agenda_id": null,
+              "start_date": "2021-07-22T14:20:00.000+02:00",
+              "end_date": "2021-07-22T14:30:00.000+02:00",
+              "visit_motive_id": 2860964
+            },
+            {
+              "agenda_id": 450964,
+              "practitioner_agenda_id": null,
+              "start_date": "2021-08-12T09:40:00.000+02:00",
+              "end_date": "2021-08-12T09:50:00.000+02:00",
+              "visit_motive_id": 2860965
+            }
+          ]
+        },
+        {
+          "agenda_id": 476014,
+          "practitioner_agenda_id": null,
+          "start_date": "2021-07-22T16:10:00.000+02:00",
+          "end_date": "2021-07-22T16:20:00.000+02:00",
+          "steps": [
+            {
+              "agenda_id": 476014,
+              "practitioner_agenda_id": null,
+              "start_date": "2021-07-22T16:10:00.000+02:00",
+              "end_date": "2021-07-22T16:20:00.000+02:00",
+              "visit_motive_id": 2860964
+            },
+            {
+              "agenda_id": 450964,
+              "practitioner_agenda_id": null,
+              "start_date": "2021-08-12T09:40:00.000+02:00",
+              "end_date": "2021-08-12T09:50:00.000+02:00",
+              "visit_motive_id": 2860965
+            }
+          ]
+        }
+      ],
+      "substitution": null
+    }
+  ],
+  "total": 3,
+  "search_result": {
+    "id": 3006785,
+    "is_directory": false,
+    "address": "2 Rue du Stade",
+    "city": "Reichshoffen",
+    "zipcode": "67110",
+    "link": "/vaccination-covid-19/reichshoffen/centre-vaccination-covid-19-du-pays-de-niederbronn-les-bains-et-de-sauer-pechelbronn",
+    "cloudinary_public_id": "default_organization_avatar",
+    "profile_id": 264505,
+    "exact_match": null,
+    "priority_speciality": false,
+    "first_name": null,
+    "last_name": "Centre vaccination COVID-19 du pays de Niederbronn-les-bains et de Sauer-Pechelbronn",
+    "name_with_title": "Centre vaccination COVID-19 du pays de Niederbronn-les-bains et de Sauer-Pechelbronn",
+    "speciality": null,
+    "organization_status": "Centre de vaccination COVID-19",
+    "top_specialities": [
+      "14 salles de vaccination"
+    ],
+    "regulation_sector_type": null,
+    "position": {
+      "lat": 48.9285433,
+      "lng": 7.6541882
+    },
+    "distance": null,
+    "place_id": null,
+    "telehealth": false,
+    "visit_motive_id": 2860964,
+    "visit_motive_name": "1re injection (avec rappel) vaccin COVID-19 (Pfizer-BioNTech)",
+    "agenda_ids": [
+      450962,
+      450964,
+      450990,
+      456400,
+      462090,
+      462118,
+      462122,
+      462124,
+      474356,
+      476014,
+      476015,
+      482327,
+      482363,
+      482403
+    ],
+    "landline_number": "0 800 00 91 10",
+    "booking_temporary_disabled": false,
+    "resetVisitMotive": false,
+    "toFinalizeStep": false,
+    "toFinalizeStepWithoutState": false,
+    "covid_vaccines": [
+      "Pfizer"
+    ],
+    "url": "/vaccination-covid-19/reichshoffen/centre-vaccination-covid-19-du-pays-de-niederbronn-les-bains-et-de-sauer-pechelbronn?highlight%5Bspeciality_ids%5D%5B%5D=5494\u0026vmid=2860964"
+  }
+}
