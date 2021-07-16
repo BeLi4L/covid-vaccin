@@ -7,6 +7,7 @@ const open = require('open')
 const myLat = 48.6049285
 const myLng = 7.6845777
 const radiusAroundMe = 17 // km
+const maxDate = '2021-07-21T00:00:00.000+02:00'
 
 main()
 
@@ -85,7 +86,7 @@ async function fetchGoodSlots (searchResultIds) {
   const slots = results
     .filter(r => r.status === "fulfilled")
     .flatMap(r => r.value)
-    .filter(({ date, search_result }) => date < '2021-07-21T00:00:00.000+02:00')
+    .filter(({ date, search_result }) => date < maxDate)
     .sort(firstBy('slot'))
     .map(({ date, search_result }) => ({
       date,
