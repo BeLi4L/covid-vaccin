@@ -1,31 +1,53 @@
 const axios = require('axios').default
 const { firstBy } = require('thenby')
 const notifier = require('node-notifier')
-
-// [...document.querySelectorAll('.dl-search-result')].map(node => node.id).map(id => /search-result-(?<id>.*)/.exec(id)?.groups.id)
-const searchResultIds = [...new Set([
-  "3635606", "3894650", "3897736", "3894646", "3887000", "3585502", "3894651", "3897741", "3894648", "3585503",
-  "3894653", "4297643", "3892506", "3618457", "3887008", "3613687", "3890192", "3626794", "3637895", "3658417",
-  "3620205", "3908663", "3890358", "3898715", "3887004", "3585742",
-
-
-  "4414883", "4899979", "4760173", "4415516", "4760169", "4413086", "4415517", "4414884", "4414886", "4414885",
-  "4414887", "5195539", "4413933", "4414441", "4616793", "4413088", "4603220", "4785591", "4415712", "4413888"
-])]
+const cheerio = require('cheerio')
 
 main()
 
 async function main () {
-  const interval = setInterval(async () => {
+  let interval
+
+  async function tick () {
     const found = await tryToFindSlot()
     if (found) {
       clearInterval(interval)
     }
-  }, 30_000)
+  }
+
+  tick()
+
+  interval = setInterval(tick, 30_000)
+}
+
+// [...document.querySelectorAll('.dl-search-result')].map(node => node.id).map(id => /search-result-(?<id>.*)/.exec(id)?.groups.id)
+async function listSearchResults () {
+  const searchResultsOnPage = await Promise.all([1, 2, 3].map(i => listSearchResultsOnPage(i)))
+
+  return searchResultsOnPage.flat()
+}
+
+async function listSearchResultsOnPage (page) {
+  const url = `https://www.doctolib.fr/vaccination-covid-19/strasbourg?page=${page}&ref_visit_motive_id=6970&ref_visit_motive_ids%5B%5D=6970&ref_visit_motive_ids%5B%5D=7005&ref_visit_motive_ids%5B%5D=8740&ref_visit_motive_ids%5B%5D=8739`
+
+  const response = await axios.get(url)
+
+  const html = response.data
+
+  const $ = cheerio.load(html)
+
+  const searchResultIds = $('.dl-search-result')
+    .toArray()
+    .map(node => node.attribs.id)
+    .map(id => /search-result-(?<id>.*)/.exec(id)?.groups.id)
+  
+  return searchResultIds
 }
 
 async function tryToFindSlot () {
-  const slots = await fetchGoodSlots()
+  const searchResultIds = await listSearchResults()
+
+  const slots = await fetchGoodSlots(searchResultIds)
 
   const date = new Date().toISOString().slice(11,19)
   console.log(`${date} - Found ${slots.length} slots`)
@@ -48,7 +70,7 @@ async function tryToFindSlot () {
   return true
 }
 
-async function fetchGoodSlots () {
+async function fetchGoodSlots (searchResultIds) {
   const results = await Promise.allSettled(searchResultIds.map(id => fetchSlotsById(id)))
 
   const slots = results

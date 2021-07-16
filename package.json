@@ -2,13 +2,11 @@
   "name": "covid-vaccin",
   "version": "1.0.0",
   "scripts": {
-    "start": "node script.js",
-    "bouga": "npm run aa && npm run bb",
-    "aa": "echo LOL",
-    "bb": "echo LOL"
+    "start": "node script.js"
   },
   "dependencies": {
     "axios": "0.21.1",
+    "cheerio": "1.0.0-rc.10",
     "node-notifier": "10.0.0",
     "thenby": "1.3.4"
   },
