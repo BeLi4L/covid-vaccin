@@ -21,6 +21,34 @@ async function main () {
   }
 }
 
+async function tryToFindSlot () {
+  const searchResultIds = await listSearchResults()
+
+  const slots = await fetchGoodSlots(searchResultIds)
+
+  const date = new Date().toISOString().slice(11,19)
+  console.log(`${date} - Found ${slots.length} slots`)
+
+  if (slots.length === 0) {
+    return false
+  }
+
+  console.log('Success !')
+  console.log(slots)
+
+  slots.forEach(slot => {
+    const date = slot.date.slice(0, 10)
+    notifier.notify({
+      title: 'VACCIN TROUVÉ !',
+      message: `Le ${date} à ${slot.city}`
+    })
+  })
+
+  open(slots[0].url)
+
+  return true
+}
+
 // [...document.querySelectorAll('.dl-search-result')].map(node => node.id).map(id => /search-result-(?<id>.*)/.exec(id)?.groups.id)
 async function listSearchResults () {
   const searchResultsOnPage = await Promise.all([1, 2, 3].map(i => listSearchResultsOnPage(i)))
@@ -50,34 +78,6 @@ async function listSearchResultsOnPage (page) {
     .map(id => /search-result-(?<id>.*)/.exec(id)?.groups.id)
   
   return searchResultIds
-}
-
-async function tryToFindSlot () {
-  const searchResultIds = await listSearchResults()
-
-  const slots = await fetchGoodSlots(searchResultIds)
-
-  const date = new Date().toISOString().slice(11,19)
-  console.log(`${date} - Found ${slots.length} slots`)
-
-  if (slots.length === 0) {
-    return false
-  }
-
-  console.log('Success !')
-  console.log(slots)
-
-  slots.forEach(slot => {
-    const date = slot.date.slice(0, 10)
-    notifier.notify({
-      title: 'VACCIN TROUVÉ !',
-      message: `Le ${date} à ${slot.city}`
-    })
-  })
-
-  open(slots[0].url)
-
-  return true
 }
 
 async function fetchGoodSlots (searchResultIds) {
