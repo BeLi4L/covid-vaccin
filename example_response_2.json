@@ -1,0 +1,80 @@
+{
+    "total": 0,
+    "availabilities": [
+        {
+            "date": "2021-07-25",
+            "slots": []
+        },
+        {
+            "date": "2021-07-26",
+            "slots": []
+        },
+        {
+            "date": "2021-07-27",
+            "slots": []
+        },
+        {
+            "date": "2021-07-28",
+            "slots": []
+        },
+        {
+            "date": "2021-07-29",
+            "slots": []
+        },
+        {
+            "date": "2021-07-30",
+            "slots": []
+        },
+        {
+            "date": "2021-07-31",
+            "slots": []
+        }
+    ],
+    "next_slot": "2021-08-05",
+    "next_slot_datetime": "2021-08-05T09:40:00.000+02:00",
+    "search_result": {
+        "id": 4943244,
+        "is_directory": false,
+        "address": "96 Avenue de Saint-Sauveur",
+        "city": "Saint-Clément-de-Rivière",
+        "zipcode": "34980",
+        "link": "/vaccination-covid-19/saint-clement-de-riviere/centre-de-vaccination-saint-clement-clinique-du-pic-saint-loup",
+        "cloudinary_public_id": "default_organization_avatar",
+        "profile_id": 243180,
+        "exact_match": null,
+        "priority_speciality": false,
+        "first_name": null,
+        "last_name": "Centre de Vaccination - Saint Clément Clinique du Pic Saint Loup",
+        "name_with_title": "Centre de Vaccination - Saint Clément Clinique du Pic Saint Loup",
+        "speciality": null,
+        "organization_status": "Centre de vaccination COVID-19",
+        "top_specialities": [
+            "4 salles de vaccination"
+        ],
+        "regulation_sector_type": null,
+        "position": {
+            "lat": 43.7071596,
+            "lng": 3.8311265
+        },
+        "distance": null,
+        "place_id": null,
+        "telehealth": false,
+        "visit_motive_id": 2934760,
+        "visit_motive_name": "1ère injection (sans rappel) vaccin COVID-19 (Pfizer-BioNTech)",
+        "agenda_ids": [
+            412026,
+            412658,
+            436696,
+            470684
+        ],
+        "landline_number": "0 809 54 19 19",
+        "booking_temporary_disabled": false,
+        "resetVisitMotive": true,
+        "toFinalizeStep": false,
+        "toFinalizeStepWithoutState": false,
+        "covid_vaccines": [
+            "Pfizer"
+        ],
+        "url": "/vaccination-covid-19/saint-clement-de-riviere/centre-de-vaccination-saint-clement-clinique-du-pic-saint-loup?highlight%5Bspeciality_ids%5D%5B%5D=5494"
+    }
+}

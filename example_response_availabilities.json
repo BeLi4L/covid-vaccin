@@ -1,0 +1,108 @@
+{
+    "availabilities": [
+        {
+            "date": "2021-08-09",
+            "slots": [
+                {
+                    "agenda_id": 409848,
+                    "practitioner_agenda_id": null,
+                    "start_date": "2021-08-09T15:40:00.000+02:00",
+                    "end_date": "2021-08-09T15:45:00.000+02:00",
+                    "steps": [
+                        {
+                            "agenda_id": 409848,
+                            "practitioner_agenda_id": null,
+                            "start_date": "2021-08-09T15:40:00.000+02:00",
+                            "end_date": "2021-08-09T15:45:00.000+02:00",
+                            "visit_motive_id": 2533890
+                        },
+                        {
+                            "agenda_id": 460739,
+                            "practitioner_agenda_id": null,
+                            "start_date": "2021-08-30T12:35:00.000+02:00",
+                            "end_date": "2021-08-30T12:40:00.000+02:00",
+                            "visit_motive_id": 2533889
+                        }
+                    ]
+                },
+                {
+                    "agenda_id": 409872,
+                    "practitioner_agenda_id": null,
+                    "start_date": "2021-08-09T15:55:00.000+02:00",
+                    "end_date": "2021-08-09T16:00:00.000+02:00",
+                    "steps": [
+                        {
+                            "agenda_id": 409872,
+                            "practitioner_agenda_id": null,
+                            "start_date": "2021-08-09T15:55:00.000+02:00",
+                            "end_date": "2021-08-09T16:00:00.000+02:00",
+                            "visit_motive_id": 2533890
+                        },
+                        {
+                            "agenda_id": 460739,
+                            "practitioner_agenda_id": null,
+                            "start_date": "2021-08-30T12:35:00.000+02:00",
+                            "end_date": "2021-08-30T12:40:00.000+02:00",
+                            "visit_motive_id": 2533889
+                        }
+                    ]
+                }
+            ],
+            "substitution": null
+        },
+        {
+            "date": "2021-08-10",
+            "slots": [],
+            "substitution": null
+        },
+        {
+            "date": "2021-08-11",
+            "slots": [],
+            "substitution": null
+        },
+        {
+            "date": "2021-08-12",
+            "slots": [],
+            "substitution": null
+        },
+        {
+            "date": "2021-08-13",
+            "slots": [
+                {
+                    "agenda_id": 409875,
+                    "practitioner_agenda_id": null,
+                    "start_date": "2021-08-13T10:25:00.000+02:00",
+                    "end_date": "2021-08-13T10:30:00.000+02:00",
+                    "steps": [
+                        {
+                            "agenda_id": 409875,
+                            "practitioner_agenda_id": null,
+                            "start_date": "2021-08-13T10:25:00.000+02:00",
+                            "end_date": "2021-08-13T10:30:00.000+02:00",
+                            "visit_motive_id": 2533890
+                        },
+                        {
+                            "agenda_id": 437087,
+                            "practitioner_agenda_id": null,
+                            "start_date": "2021-09-03T11:25:00.000+02:00",
+                            "end_date": "2021-09-03T11:30:00.000+02:00",
+                            "visit_motive_id": 2533889
+                        }
+                    ]
+                }
+            ],
+            "substitution": null
+        },
+        {
+            "date": "2021-08-14",
+            "slots": [],
+            "substitution": null
+        },
+        {
+            "date": "2021-08-15",
+            "slots": [],
+            "substitution": null
+        }
+    ],
+    "total": 3
+}
