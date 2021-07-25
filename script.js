@@ -7,7 +7,7 @@ const open = require('open')
 const doctolibApi = require('./doctolib-api')
 
 const myPosition = { lat: 43.6304129, lng: 3.9002208 } // montpellier
-const radiusAroundMe = 12 // km
+const radiusAroundMe = 10 // km
 // const minDate = '2021-08-01T00:00:00.000+02:00'
 const minDate = '2021-08-06'
 
