@@ -17,7 +17,13 @@ interface SearchResultResponse {
 
 interface AvailabilitiesResponse {
   total: number
-  availabilities: Availability[]
+  availabilities: Availability2[]
+}
+
+interface Availability2 {
+  date: string
+  slots: string[]
+  substitution: any
 }
 
 interface Availability {

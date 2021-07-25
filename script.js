@@ -7,8 +7,9 @@ const open = require('open')
 const doctolibApi = require('./doctolib-api')
 
 const myPosition = { lat: 43.6304129, lng: 3.9002208 } // montpellier
-const radiusAroundMe = 17 // km
-const minDate = '2021-08-07T00:00:00.000+02:00'
+const radiusAroundMe = 12 // km
+// const minDate = '2021-08-01T00:00:00.000+02:00'
+const minDate = '2021-08-06'
 
 main()
 
@@ -58,7 +59,7 @@ async function listSearchResults () {
 }
 
 async function listSearchResultsOnPage (page) {
-  const url = `https://www.doctolib.fr/vaccination-covid-19/strasbourg?page=${page}&ref_visit_motive_id=6970&ref_visit_motive_ids%5B%5D=6970&ref_visit_motive_ids%5B%5D=7005&ref_visit_motive_ids%5B%5D=8740&ref_visit_motive_ids%5B%5D=8739`
+  const url = `https://www.doctolib.fr/vaccination-covid-19/castelnau-le-lez?page=${page}&ref_visit_motive_ids[]=6970&ref_visit_motive_ids[]=7005&ref_visit_motive_ids[]=8740&ref_visit_motive_ids[]=8739`
 
   const response = await axios.get(url)
 
@@ -92,6 +93,8 @@ async function fetchGoodSlots (searchResultIds) {
   const searchResultResponses = results
     .filter(r => r.status === 'fulfilled')
     .map(r => r.value)
+
+  // console.log('searchResultResponses:', searchResultResponses.length)
   
   const errors = results
     .filter(r => r.status === 'rejected')
@@ -105,9 +108,12 @@ async function fetchGoodSlots (searchResultIds) {
     searchResultResponses
       .map(async ({ search_result }) => {
         const { availabilities } = await doctolibApi.getAvailabilitiesResponse(minDate, search_result.agenda_ids)
+
+        // console.log(availabilities.length, 'availabilities')
+
         const dates = availabilities
-            .flatMap(o => o.slots)
-            .map(slot => slot.start_date)
+          .flatMap(o => o.slots)
+          // .map(slot => slot.start_date)
 
         return dates.map(date => ({ date, search_result })) 
       })
@@ -118,7 +124,7 @@ async function fetchGoodSlots (searchResultIds) {
    */
    const slots = results2
     .filter(r => r.status === 'fulfilled')
-    .map(r => r.value)
+    .flatMap(r => r.value)
   
   const errors2 = results2
     .filter(r => r.status === 'rejected')

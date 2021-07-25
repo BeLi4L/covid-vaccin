@@ -28,8 +28,8 @@ async function getSearchResultResponse (searchResultId) {
  * @type {(startDate: string, agendaIds: number[]) => Promise<AvailabilitiesResponse>}
  */
  async function getAvailabilitiesResponse (startDate, agendaIds) {
-  const url = `https://www.doctolib.fr/availabilities.json?start_date=${startDate}&visit_motive_ids=2533890&agenda_ids=${agendaIds.join('-')}&limit=7`
-
+  const url = `https://www.doctolib.fr/availabilities.json?start_date=${startDate}&visit_motive_ids=2934760&agenda_ids=${agendaIds.join('-')}&limit=7`
+  
   const response = await axios.get(url, {
     "headers": {
       "accept": "application/json",
@@ -44,6 +44,7 @@ async function getSearchResultResponse (searchResultId) {
       "cookie": "ssid=c8804324182lin-RLT4Mg--KzVJ; esid=iSaj5ozTMBk3EVYaNJzQo7Tf; _ga=GA1.2.805815008.1613923356; __cf_bm=92bf7c06479dfd3a692ca62a3204e9822ef8a733-1627241222-1800-Ae596n3loV+TSNbK7SqfskdBIyznBn270aQXR9g07upFn8jzRpeC82ZTahm7ZUB7zNsxzZdIu9w1SmcNdiTVw4A=; utm_b2b=eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaEpJaUoxZEcxZmMyOTFjbU5sUFdScGNtVmpkQ1oxZEcxZmJXVmthWFZ0UFFZNkJrVlUiLCJleHAiOiIyMDIxLTA3LTI1VDE5OjU4OjIxLjE1N1oiLCJwdXIiOiJjb29raWUudXRtX2IyYiJ9fQ%3D%3D--70416c33a26cb5d57b23d3db970219f1aa649430; _doctolib_session=MNwmKjALWkmSxikf3ypSjI20UWkVIgDV7itkXlshXxhDa4sAZUC%2B3cT5JRvz6ZVGXpZJPeXpJjCGlIdZLe3V5zaEME%2FQ6XA7iVi1eOWSKBzWf%2B0xIVbc2alDFNVBRDkMQ4ykojCEwyNAgCj7uvXseO22530iafy7DVMUV28cTb7PgjM%2B0Y4X84MLFOjkiAVhEZhxGAgFScEsWz2UPHOSdu01BtgVxyV5vE1rjRNFb8VXIQqR9X94ICgDeq1AL3CK7q4PsIiPW0YoH98ZzvsNczwSK85CLpnTYsUg4cJ%2BcFVXpuE1Sqsz3jQFLcrCE59KiLpWpw%2BeKwc9OmsnRrK0DeZxMPqybNt5EwNkmbWpbxlX2knBS%2FfVguBI%2BrT%2FjC0%3D--jefE7K%2B%2Bv%2FD%2FDJOX--cy2nSlHP5vrekK7VaH7oMg%3D%3D; __cfwaitingroom=ChhpeGVTeFNtbjRjeWZYMVdxTERnSmF3PT0ShAJ0aTEraU10VEJwaTRHcG8wMEswK2ZVeDlIR1JTano2emdGcXIyanVRQ0RNc2ppWUVzVHpHcnJGdXUwT3liNmVNUTVBY2YxVjU3SnVydm9RS2NLb01ISFgxNmxkYm5mcHRjUkNjTFZ2dXYwQ2djcnowbUo2TTBTak02RFJEcEkzS21pLzNldXFTaitnQzlXblhRdnVFWHBMUFYrSTNxeVJwZktoYURoM0NhcllPSDFodGdyN1dOMkRZNXo4ZlN5eldYa2VuSmhmNkJPT1RUTGRpMHQwYU9QQllqYVRGNFpJdXBKRU1Rb3ZvejJ3cVhzOXFrU2ZXRnJFZ2JzdkNBN3VkTXc9PQ%3D%3D"
     }
   })
+  // console.log('prout', url, response.data)
   return response.data
 }
 
