@@ -4,10 +4,11 @@ const notifier = require('node-notifier')
 const cheerio = require('cheerio')
 const open = require('open')
 
-const myLat = 48.6049285
-const myLng = 7.6845777
+const doctolibApi = require('./doctolib-api')
+
+const myPosition = { lat: 43.6304129, lng: 3.9002208 } // montpellier
 const radiusAroundMe = 17 // km
-const maxDate = '2021-07-21T00:00:00.000+02:00'
+const minDate = '2021-08-07T00:00:00.000+02:00'
 
 main()
 
@@ -70,7 +71,7 @@ async function listSearchResultsOnPage (page) {
   const goodSearchResultNodes = searchResultNodes.filter(node => {
     const lat = parseFloat(node.attribs['data-lat'])
     const lng = parseFloat(node.attribs['data-lng'])
-    return gpsDistance(lat, lng, myLat, myLng) <= radiusAroundMe
+    return gpsDistance(lat, lng, myPosition.lat, myPosition.lng) <= radiusAroundMe
   })
 
   const searchResultIds = goodSearchResultNodes
@@ -81,20 +82,17 @@ async function listSearchResultsOnPage (page) {
 }
 
 async function fetchGoodSlots (searchResultIds) {
-  const results = await Promise.allSettled(searchResultIds.map(id => fetchSlotsById(id)))
+  const results = await Promise.allSettled(searchResultIds.map(id =>
+    doctolibApi.getSearchResultResponse(id)
+  ))
 
-  const slots = results
-    .filter(r => r.status === "fulfilled")
-    .flatMap(r => r.value)
-    .filter(({ date, search_result }) => date < maxDate)
-    .sort(firstBy('slot'))
-    .map(({ date, search_result }) => ({
-      date,
-      url: 'https://www.doctolib.fr' + search_result.link,
-      zipcode: search_result.zipcode,
-      city: search_result.city
-    }))
-
+  /**
+   * @type {doctolibApi.SearchResultResponse[]}
+   */
+  const searchResultResponses = results
+    .filter(r => r.status === 'fulfilled')
+    .map(r => r.value)
+  
   const errors = results
     .filter(r => r.status === 'rejected')
     .map(r => r.reason)
@@ -103,39 +101,46 @@ async function fetchGoodSlots (searchResultIds) {
     errors.forEach(e => console.error(e))
   }
 
-  return slots
+  const results2 = await Promise.allSettled(
+    searchResultResponses
+      .map(async ({ search_result }) => {
+        const { availabilities } = await doctolibApi.getAvailabilitiesResponse(minDate, search_result.agenda_ids)
+        const dates = availabilities
+            .flatMap(o => o.slots)
+            .map(slot => slot.start_date)
+
+        return dates.map(date => ({ date, search_result })) 
+      })
+  )
+
+  /**
+   * @type {{ date: string, search_result: doctolibApi.SearchResult }[]}
+   */
+   const slots = results2
+    .filter(r => r.status === 'fulfilled')
+    .map(r => r.value)
+  
+  const errors2 = results2
+    .filter(r => r.status === 'rejected')
+    .map(r => r.reason)
+  
+  if (errors2.length > 0) {
+    errors2.forEach(e => console.error(e))
+  }
+
+  const goodSlots = slots
+    .sort(firstBy('date'))
+    .map(({ date, search_result }) => ({
+      date,
+      url: 'https://www.doctolib.fr' + search_result.link,
+      zipcode: search_result.zipcode,
+      city: search_result.city
+    }))
+
+  return goodSlots
 }
 
-async function fetchSlotsById(searchResultId) {
-  const url = `https://www.doctolib.fr/search_results/${searchResultId}.json?limit=7&ref_visit_motive_id=6970&ref_visit_motive_ids%5B%5D=6970&ref_visit_motive_ids%5B%5D=7005&speciality_id=5494&search_result_format=json`
-  // const url = 'https://www.doctolib.fr/search_results/3006785.json?limit=7&ref_visit_motive_id=6970&ref_visit_motive_ids%5B%5D=6970&ref_visit_motive_ids%5B%5D=7005&speciality_id=5494&search_result_format=json'
-
-  const response = await axios.get(url, {
-    "headers": {
-      "accept": "application/json",
-      "accept-language": "fr,en;q=0.9,en-US;q=0.8",
-      "content-type": "application/json; charset=utf-8",
-      "if-none-match": "W/\"0df28c841e4bb9124006f9d8ebd94717\"",
-      "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
-      "sec-ch-ua-mobile": "?0",
-      "sec-fetch-dest": "empty",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-site": "same-origin",
-      "x-csrf-token": "u5JeiRI2hv56QgXw70CW2S0K94lMuwoPjHBmiP2odCtvMetvfzCUoIfJipvIGUdJPrj1q19To5XBWOWbMNLXmQ==",
-      "cookie": "ssid=c890438990lin-Mso0BZx20z9D; esid=BaTvvT8Ky5g3h_OlQobsLtnY; didomi_token=eyJ1c2VyX2lkIjoiMTc4NmExNmMtMzUzMC02ZWI1LTgwZWMtMmJiYmE4MmYxMGZiIiwiY3JlYXRlZCI6IjIwMjEtMDMtMjVUMTU6NTM6MDAuMDY1WiIsInVwZGF0ZWQiOiIyMDIxLTAzLTI1VDE1OjU0OjU4LjA1MFoiLCJ2ZW5kb3JzIjp7ImVuYWJsZWQiOlsiYzpnb29nbGVhbmEtS0ZLenBXamIiLCJjOmRvY3RvbGliLWl3WEJoV2NwIiwiYzpnb29nbGVhZHMtNk5hODZqbnEiLCJjOmNsb3VkZmxhcmUtbVlZRk1ZTlQiLCJjOmRvdWJsZWNsaWMtcjYyMzhnYTkiXX0sInB1cnBvc2VzIjp7ImVuYWJsZWQiOlsibWVzdXJlZGEtREVUUXo2N0EiLCJtYXJrZXRpbmctSkxScWJ0RzgiLCJwdWJsaWNpdGUtQ2pXcVdhWjIiXX0sInZlcnNpb24iOjF9; euconsent=BPDnvKYPDnvc0AHABBFRDWAAAAAyOAAA; _ga=GA1.2.209687280.1616687698; __cf_bm=64831a857f602a0b98e71c182c21a8da4f5463c4-1626426114-1800-AZdAyanvjjPMM8ieyeBCi3vG7Ttt1XNiR8Wl1BVQ7LhsUpRgdaLnZ6IGGaC23X9/j0PppzLdYs4CEeDywl3277U=; __cfwaitingroom=ChhpWDAzTTFyZ25NY2ErVjd3Zy85dGZRPT0S1AFWSVVaVHVnZ2k1VHpRQ3p6Smxxc0pKSXZoOU9tYmdPMk1Zc0VvcERJNEhxcCt2TnJxWUdCZWxiZW9tNkFiNFA5UHhaSUI0TnBURGUrLzYzVXBZVHdDTmV3cGNwSWRYaFBHTVFiQk1lMGlDOG1MdG9ab1hUVXNBQUVnTGVjTU4zMG45cEptc3BPeStveUptdmZuRVVZWlExRS9rQVBEa25taVg0L3AwMGZCaHZmTW1wN2JTa0QvcWFSSFh3RzBQRUl0MjkvSEhSUnFjdmNqNXVKanVIeg%3D%3D; utm_b2b=eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaEpJaWwxZEcxZmMyOTFjbU5sUFdkdmIyZHNaU1oxZEcxZmJXVmthWFZ0UFc5eVoyRnVhV01HT2daRlZBPT0iLCJleHAiOiIyMDIxLTA3LTE2VDA5OjM4OjEwLjk5OFoiLCJwdXIiOiJjb29raWUudXRtX2IyYiJ9fQ%3D%3D--ea8326476dd65a70bcaa88dbb5cb7703fa8eaa81; _doctolib_session=LuCHaY382fTGSaAGpEd3slYFwZZuOlbsPU1gv2Cq9u9z0MA6X9jpOPa1UeYfiUxrhKRQQPts%2BWJ4QYXQsdsTy0vTVEsw2xDqLitSsGxCFeWpCxf2wBlSWXnm%2FHkM4H%2F8ykkE%2FdsjLzjqG6VNMv35mYQhk0kV5qedkbnuYqo4kfOQUp5RCflmOCuWfP2ZMGQIjDL6PF4oOWleFehXUBaOh033GO74wqqwTyPyhXf%2B2Pt2Cn%2FSMOMXkcA7dA%2ByQ23mTwhoHt6CFz6K%2FAyDCDkyeXg%2BuJ3MDAJMHp4aE3ZCjeE43Rpr7HTOAefsrmJ3PT71JqAAC499N8WMVNyC79ORpdSEXY%2BJCi%2BsgOsZWzE6tJlM3EU7wGmbbhNSWNhEh%2BVjiUHrzzIv1%2FT9DToUixAUbHXmnulBzMYaxWCbe4Exz64hs6b5u2JInxkK7Uo40teAvLafTtPeQQIbtfgPYSpo--M3dacrLm7zTDupVy--BMZ03Ddd9PNiT%2FbkEtJucQ%3D%3D"
-    }
-    // "referrer": "https://www.doctolib.fr/vaccination-covid-19/strasbourg?page=3&ref_visit_motive_id=6970&ref_visit_motive_ids%5B%5D=6970&ref_visit_motive_ids%5B%5D=7005",
-    // "referrerPolicy": "origin-when-cross-origin",
-    // "mode": "cors"
-  })
-
-  // console.log(response.status, response.data)
-
-  const dates = response.data.availabilities.flatMap(o => o.slots).map(slot => slot.start_date)
-  const search_result = response.data.search_result
-
-  return dates.map(date => ({ date, search_result }))
-}
+// UTILS
 
 function toRad (value) {
   return (value * Math.PI) / 180
