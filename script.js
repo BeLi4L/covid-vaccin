@@ -28,8 +28,8 @@ async function tryToFindSlot () {
 
   const slots = await fetchGoodSlots(searchResultIds)
 
-  const date = new Date().toISOString().slice(11,19)
-  console.log(`${date} - Found ${slots.length} slots`)
+  const time = new Date().toTimeString().slice(0, 8)
+  console.log(`${time} - Found ${slots.length} slots`)
 
   if (slots.length === 0) {
     return false
