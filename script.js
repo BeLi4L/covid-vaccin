@@ -61,7 +61,7 @@ async function listSearchResults () {
 async function listSearchResultsOnPage (page) {
   const url = `https://www.doctolib.fr/vaccination-covid-19/castelnau-le-lez?page=${page}&ref_visit_motive_ids[]=6970&ref_visit_motive_ids[]=7005&ref_visit_motive_ids[]=8740&ref_visit_motive_ids[]=8739`
 
-  const response = await axios.get(url)
+  const response = await axios.get(url, { timeout: 10_000 })
 
   const html = response.data
 
