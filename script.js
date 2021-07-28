@@ -101,12 +101,15 @@ async function fetchGoodSlots (searchResultIds) {
     .map(r => r.reason)
   
   if (errors.length > 0) {
-    errors.forEach(e => console.error(e))
+    errors.forEach(e => console.error('error 1', e))
   }
 
   const results2 = await Promise.allSettled(
     searchResultResponses
       .map(async ({ search_result }) => {
+        if (search_result.agenda_ids == null || search_result.agenda_ids.length === 0) {
+          console.warn('WARNING empty agenda IDs', search_result)
+        }
         const { availabilities } = await doctolibApi.getAvailabilitiesResponse(minDate, search_result.agenda_ids)
 
         // console.log(availabilities.length, 'availabilities')
@@ -131,7 +134,11 @@ async function fetchGoodSlots (searchResultIds) {
     .map(r => r.reason)
   
   if (errors2.length > 0) {
-    errors2.forEach(e => console.error(e))
+    errors2.forEach(e => {
+      delete e.request
+      delete e.response
+      // console.error('error 2', e)
+    })
   }
 
   const goodSlots = slots
