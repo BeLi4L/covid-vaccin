@@ -18,7 +18,7 @@ async function main () {
   while (!found) {
     found = await tryToFindSlot()
     if (!found) {
-      await sleep(5_000)
+      await sleep(10_000)
     }
   }
 }
