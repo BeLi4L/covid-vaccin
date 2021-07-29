@@ -16,7 +16,11 @@ main()
 async function main () {
   let found = false
   while (!found) {
-    found = await tryToFindSlot()
+    try {
+      found = await tryToFindSlot()
+    } catch (error) {
+      console.error('Error finding slot', error)
+    }
     if (!found) {
       await sleep(10_000)
     }
