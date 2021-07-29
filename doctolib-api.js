@@ -29,7 +29,7 @@ async function getSearchResultResponse (searchResultId) {
  * @type {(startDate: string, agendaIds: number[]) => Promise<AvailabilitiesResponse>}
  */
  async function getAvailabilitiesResponse (startDate, agendaIds) {
-  const url = `https://www.doctolib.fr/availabilities.json?start_date=${startDate}&visit_motive_ids=2934760&agenda_ids=${agendaIds.join('-')}&limit=7`
+  const url = `https://www.doctolib.fr/availabilities.json?start_date=${startDate}&visit_motive_ids=2766691&agenda_ids=${agendaIds.join('-')}&limit=7`
   
   const response = await axios.get(url, {
     "headers": {
